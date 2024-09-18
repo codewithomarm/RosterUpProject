@@ -15,7 +15,7 @@ public class Account {
     private Boolean isActive;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_tenant_id")
+    @JoinColumn(name = "fk_tenant_id", nullable = false)
     private Tenant tenant;
 
     public Account(){
