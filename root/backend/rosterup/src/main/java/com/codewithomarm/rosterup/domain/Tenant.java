@@ -22,6 +22,9 @@ public class Tenant {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tenant")
     private List<Account> accounts;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tenant")
+    private List<Position> positions;
+
     public Tenant() {
     }
 
@@ -65,5 +68,13 @@ public class Tenant {
 
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
     }
 }
