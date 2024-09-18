@@ -31,6 +31,9 @@ public class Tenant {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tenant")
     private List<Employee> employees;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tenant")
+    private List<Roster> rosters;
+
     public Tenant() {
     }
 
@@ -98,5 +101,13 @@ public class Tenant {
 
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
+    }
+
+    public List<Roster> getRosters() {
+        return rosters;
+    }
+
+    public void setRosters(List<Roster> rosters) {
+        this.rosters = rosters;
     }
 }
