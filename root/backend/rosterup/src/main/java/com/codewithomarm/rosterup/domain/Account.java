@@ -14,6 +14,10 @@ public class Account {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_tenant_id")
+    private Tenant tenant;
+
     public Account(){
     }
 
@@ -40,5 +44,13 @@ public class Account {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 }
