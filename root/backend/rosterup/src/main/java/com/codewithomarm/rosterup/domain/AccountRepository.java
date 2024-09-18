@@ -2,19 +2,20 @@ package com.codewithomarm.rosterup.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    // Fetch account by name
-    Optional<Account> findByName(String name);
+    // Fetch account by name and tenant id
+    Optional<Account> findByNameAndTenantId(String name, Long tenantId);
 
-    // Fetch only active accounts
-    @Query("SELECT a FROM Account a WHERE a.isActive = true")
-    List<Account> findAllActive();
+    // Fetch only active accounts by tenant id
+    @Query("SELECT a FROM Account a WHERE a.isActive = true AND a.tenant.id = :tenantId")
+    List<Account> findAllActiveByTenantId(@Param("tenantId") Long tenantId);
 
-    // Fetch only inactive accounts
-    @Query("SELECT a FROM Account a WHERE a.isActive = false")
-    List<Account> findAllInactive();
+    // Fetch only inactive accounts by tenant id
+    @Query("SELECT a FROM Account a WHERE a.isActive = false AND a.tenant.id = :tenantId")
+    List<Account> findAllInactive(@Param("tenantId") Long tenantId);
 }
