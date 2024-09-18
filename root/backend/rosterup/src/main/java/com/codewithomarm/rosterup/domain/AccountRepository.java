@@ -13,5 +13,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findAllActive();
 
     // Fetch only inactive accounts
-    List<Account> findallInactive();
+    List<Account> findAllInactive();
 }
