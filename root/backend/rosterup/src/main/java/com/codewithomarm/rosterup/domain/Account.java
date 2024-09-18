@@ -2,6 +2,8 @@ package com.codewithomarm.rosterup.domain;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Account {
     @Id
@@ -17,6 +19,9 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_tenant_id", nullable = false)
     private Tenant tenant;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+    private List<Roster> rosters;
 
     public Account(){
     }
@@ -53,5 +58,13 @@ public class Account {
 
     public void setTenant(Tenant tenant) {
         this.tenant = tenant;
+    }
+
+    public List<Roster> getRosters() {
+        return rosters;
+    }
+
+    public void setRosters(List<Roster> rosters) {
+        this.rosters = rosters;
     }
 }
