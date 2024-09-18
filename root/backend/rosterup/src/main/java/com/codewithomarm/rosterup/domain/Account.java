@@ -21,9 +21,10 @@ public class Account {
     public Account(){
     }
 
-    public Account(String name, Boolean isActive) {
+    public Account(String name, Boolean isActive, Tenant tenant) {
         this.name = name;
         this.isActive = isActive;
+        this.tenant = tenant;
     }
 
     public Long getId() {
