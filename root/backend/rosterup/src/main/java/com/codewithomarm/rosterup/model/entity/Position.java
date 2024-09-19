@@ -1,23 +1,28 @@
-package com.codewithomarm.rosterup.domain;
+package com.codewithomarm.rosterup.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
-public class LineOfBusiness {
+public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 45)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_tenant_id", nullable = false)
     private Tenant tenant;
 
-    public LineOfBusiness() {}
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "position")
+    private List<Roster> rosters;
 
-    public LineOfBusiness(String name, Tenant tenant) {
+    public Position() {}
+
+    public Position(String name, Tenant tenant) {
         this.name = name;
         this.tenant = tenant;
     }
@@ -40,5 +45,13 @@ public class LineOfBusiness {
 
     public void setTenant(Tenant tenant) {
         this.tenant = tenant;
+    }
+
+    public List<Roster> getRosters() {
+        return rosters;
+    }
+
+    public void setRosters(List<Roster> rosters) {
+        this.rosters = rosters;
     }
 }

@@ -1,4 +1,4 @@
-package com.codewithomarm.rosterup.domain;
+package com.codewithomarm.rosterup.model.entity;
 
 import jakarta.persistence.*;
 
