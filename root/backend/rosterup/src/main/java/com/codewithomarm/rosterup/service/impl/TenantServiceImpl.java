@@ -1,9 +1,12 @@
 package com.codewithomarm.rosterup.service.impl;
 
+import com.codewithomarm.rosterup.dto.TenantDTO;
 import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
+import com.codewithomarm.rosterup.mapper.TenantMapper;
 import com.codewithomarm.rosterup.model.entity.Tenant;
 import com.codewithomarm.rosterup.repository.TenantRepository;
 import com.codewithomarm.rosterup.service.ITenantService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +16,12 @@ import java.util.List;
 public class TenantServiceImpl implements ITenantService {
 
     private final TenantRepository tenantRepository;
+    private final TenantMapper tenantMapper;
 
     @Autowired
-    public TenantServiceImpl(TenantRepository tenantRepository) {
+    public TenantServiceImpl(TenantRepository tenantRepository, TenantMapper tenantMapper) {
         this.tenantRepository = tenantRepository;
+        this.tenantMapper = tenantMapper;
     }
 
     @Override
@@ -52,8 +57,24 @@ public class TenantServiceImpl implements ITenantService {
     }
 
     @Override
-    public Tenant createTenant(Tenant tenant) {
-        return null;
+    @Transactional
+    public TenantDTO createTenant(TenantDTO tenantDto) {
+        // Validate if subdomain already exist
+        if (tenantRepository.findBySubdomain(tenantDto.getSubdomain()).isPresent()) {
+            throw new IllegalArgumentException("Tenant already exists with subdomain: " + tenantDto.getSubdomain());
+        }
+
+        // Convert from Tenant DTO to Tenant Entity
+        Tenant tenant = tenantMapper.toEntity(tenantDto);
+
+        // Set isActive value by default
+        tenant.setActive(true);
+
+        // Save tenant entity in db
+        Tenant savedTenant = tenantRepository.save(tenant);
+
+        // Convert saved tenant entity to dto and return
+        return tenantMapper.toDto(savedTenant);
     }
 
     @Override
