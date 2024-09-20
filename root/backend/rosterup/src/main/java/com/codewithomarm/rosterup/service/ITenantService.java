@@ -1,5 +1,6 @@
 package com.codewithomarm.rosterup.service;
 
+import com.codewithomarm.rosterup.dto.TenantDTO;
 import com.codewithomarm.rosterup.model.entity.Tenant;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface ITenantService {
     Tenant getTenantBySubdomain(String subdomain);
     List<Tenant> getActiveTenants();
     List<Tenant> getInactiveTenants();
-    Tenant createTenant(Tenant tenant);
+    TenantDTO createTenant(TenantDTO tenant);
     Tenant updateTenant(Tenant tenant);
     void deleteTenant(Long tenantId);
 }
