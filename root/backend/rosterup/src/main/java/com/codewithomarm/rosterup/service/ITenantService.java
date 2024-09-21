@@ -13,6 +13,6 @@ public interface ITenantService {
     List<Tenant> getActiveTenants();
     List<Tenant> getInactiveTenants();
     TenantDTO createTenant(TenantDTO tenant);
-    Tenant updateTenant(Tenant tenant);
+    TenantDTO updateTenant(Long tenantId, TenantDTO tenant);
     void deleteTenant(Long tenantId);
 }
