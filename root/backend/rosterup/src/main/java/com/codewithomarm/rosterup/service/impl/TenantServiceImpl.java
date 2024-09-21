@@ -1,6 +1,7 @@
 package com.codewithomarm.rosterup.service.impl;
 
 import com.codewithomarm.rosterup.dto.TenantDTO;
+import com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException;
 import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
 import com.codewithomarm.rosterup.mapper.TenantMapper;
 import com.codewithomarm.rosterup.model.entity.Tenant;
@@ -32,7 +33,7 @@ public class TenantServiceImpl implements ITenantService {
     @Override
     public Tenant getTenantById(Long tenantId) {
         return tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new TenantNotFoundException("Tenant not found with id: " + tenantId));
+                .orElseThrow(() -> new TenantNotFoundException(tenantId));
     }
 
     @Override
@@ -43,7 +44,7 @@ public class TenantServiceImpl implements ITenantService {
     @Override
     public Tenant getTenantBySubdomain(String subdomain) {
         return tenantRepository.findBySubdomain(subdomain)
-                .orElseThrow(() -> new TenantNotFoundException("Tenant not found with subdomain: " + subdomain));
+                .orElseThrow(() -> new TenantNotFoundException(subdomain));
     }
 
     @Override
@@ -63,30 +64,54 @@ public class TenantServiceImpl implements ITenantService {
         if (tenantRepository.findBySubdomain(tenantDto.getSubdomain()).isPresent()) {
             throw new IllegalArgumentException("Tenant already exists with subdomain: " + tenantDto.getSubdomain());
         }
-
         // Convert from Tenant DTO to Tenant Entity
-        Tenant tenant = tenantMapper.toEntity(tenantDto);
+        Tenant tenantEntity = tenantMapper.toEntity(tenantDto);
 
         // Set isActive value by default
-        tenant.setActive(true);
+        tenantEntity.setActive(true);
 
         // Save tenant entity in db
-        Tenant savedTenant = tenantRepository.save(tenant);
+        Tenant savedTenantEntity = tenantRepository.save(tenantEntity);
 
         // Convert saved tenant entity to dto and return
-        return tenantMapper.toDto(savedTenant);
+        return tenantMapper.toDto(savedTenantEntity);
     }
 
     @Override
-    public Tenant updateTenant(Tenant tenant) {
-        return null;
+    @Transactional
+    public TenantDTO updateTenant(Long tenantId, TenantDTO tenantDto) {
+        // validate tenantDto fields
+        if (tenantDto.getName()==null || tenantDto.getSubdomain()==null || tenantDto.getActive()==null){
+            throw new IllegalArgumentException("Tenant name, subdomain and isActive are required");
+        }
+
+        // Fetch the existing tenant from the db using id parameter
+        Tenant tenantEntity = tenantRepository.findById(tenantId)
+                .orElseThrow(() -> new TenantNotFoundException(tenantId));
+
+        // Verify if the subdomain is being changed and if it's already in use by other tenant
+        if (!tenantEntity.getSubdomain().equals(tenantDto.getSubdomain()) &&
+            tenantRepository.findBySubdomain(tenantDto.getSubdomain()).isPresent()) {
+            throw new DuplicateSubdomainException(tenantDto.getSubdomain());
+        }
+
+        // Update tenant entity
+        tenantEntity.setName(tenantDto.getName());
+        tenantEntity.setSubdomain(tenantDto.getSubdomain());
+        tenantEntity.setActive(tenantDto.getActive());
+
+        // Save updated tenant entity in db
+        Tenant updatedTenantEntity = tenantRepository.save(tenantEntity);
+
+        // Convert and return updated tenant entity to dto
+        return tenantMapper.toDto(updatedTenantEntity);
     }
 
     @Override
     public void deleteTenant(Long tenantId) {
         tenantRepository.findById(tenantId)
                 .ifPresentOrElse(tenantRepository::delete, () -> {
-                    throw new TenantNotFoundException("Tenant not found with id: " + tenantId);
+                    throw new TenantNotFoundException(tenantId);
                 });
     }
 }
