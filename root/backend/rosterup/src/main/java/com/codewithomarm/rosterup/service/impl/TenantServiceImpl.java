@@ -10,6 +10,8 @@ import com.codewithomarm.rosterup.repository.TenantRepository;
 import com.codewithomarm.rosterup.service.ITenantService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,41 +29,87 @@ public class TenantServiceImpl implements ITenantService {
         this.tenantMapper = tenantMapper;
     }
 
+    /**
+     * Retrieves a page list of all tenants
+     * @param pageable Pagination information
+     * @return A page of TenantDTOs
+     * @author Omar Montoya @codewithomarm
+     */
     @Override
-    public List<Tenant> getAllTenants() {
-        return tenantRepository.findAll();
+    public Page<TenantDTO> getAllTenants(Pageable pageable) {
+        return tenantRepository.findAll(pageable).map(tenantMapper::toDto);
     }
 
+    /**
+     * Retrieves a tenant by its ID.
+     * @param tenantId the ID of the tenant to retrieve
+     * @return the TenantDTO of the found tenant
+     * @throws TenantNotFoundException if the tenant is not found
+     */
     @Override
-    public Tenant getTenantById(Long tenantId) {
+    public TenantDTO getTenantById(Long tenantId) {
         return tenantRepository.findById(tenantId)
+                .map(tenantMapper::toDto)
                 .orElseThrow(() -> new TenantNotFoundException(tenantId));
     }
 
+    /**
+     * Retrieves a page list of tenantDTO by name.
+     * @param name the name of the tenants to retrieve
+     * @param pageable Pagination information
+     * @return a page of TenantDTOs
+     */
     @Override
-    public List<Tenant> getTenantsByName(String name) {
-        return tenantRepository.findByName(name);
+    public Page<TenantDTO> getTenantsByName(String name, Pageable pageable) {
+        return tenantRepository.findByName(name, pageable).map(tenantMapper::toDto);
     }
 
+    /**
+     * Retrieves a tenant by its subdomain
+     * @param subdomain the subdomain of the tenant to retrieve
+     * @return the TenantDTO of the found tenant
+     * @throws TenantNotFoundException if the tenant is not found
+     */
     @Override
-    public Tenant getTenantBySubdomain(String subdomain) {
+    public TenantDTO getTenantBySubdomain(String subdomain) {
         return tenantRepository.findBySubdomain(subdomain)
+                .map(tenantMapper::toDto)
                 .orElseThrow(() -> new TenantNotFoundException(subdomain));
     }
 
+    /**
+     * Retrieves a paginated list of all active tenants.
+     * @param pageable Pagination information: page number, page size, and sorting details.
+     * @return a page containing tenantDTOs of active tenants.
+     */
     @Override
-    public List<Tenant> getActiveTenants() {
-        return tenantRepository.findAllActive();
+    public Page<TenantDTO> getActiveTenants(Pageable pageable) {
+        return tenantRepository.findAllActive(pageable).map(tenantMapper::toDto);
     }
 
+    /**
+     * Retrieves a paginated list of all inactive tenants.
+     * @param pageable Pagination information: page number, page size, and sorting details.
+     * @return a page containing tenantDTOs of inactive tenants.
+     */
     @Override
-    public List<Tenant> getInactiveTenants() {
-        return tenantRepository.findAllInactive();
+    public Page<TenantDTO> getInactiveTenants(Pageable pageable) {
+        return tenantRepository.findAllInactive(pageable).map(tenantMapper::toDto);
     }
 
+    /**
+     * Creates a new tenant.
+     * @param tenantDto the tenantDTO containing the new tenant´s information.
+     * @return the created TenantDTO.
+     * @throws InvalidTenantDataException if the tenant data is invalid or empty.
+     * @throws DuplicateSubdomainException if the subdomain already exists.
+     */
     @Override
     @Transactional
     public TenantDTO createTenant(TenantDTO tenantDto) {
+        // Validate tenantDto fields
+        validateTenantData(tenantDto);
+
         // Validate if subdomain already exist
         if (tenantRepository.findBySubdomain(tenantDto.getSubdomain()).isPresent()) {
             throw new DuplicateSubdomainException(tenantDto.getSubdomain());
@@ -79,6 +127,14 @@ public class TenantServiceImpl implements ITenantService {
         return tenantMapper.toDto(savedTenantEntity);
     }
 
+    /**
+     * Updates and existing tenant.
+     * @param tenantId the id from the tenant to be updated.
+     * @param tenantDto the tenantDTO containing the updated tenant´s information.
+     * @return the updated tenantDTO.
+     * @throws InvalidTenantDataException if the tenant data is invalid or empty.
+     * @throws TenantNotFoundException if the tenant is not found based on the id provided.
+     */
     @Override
     @Transactional
     public TenantDTO updateTenant(Long tenantId, TenantDTO tenantDto) {
@@ -107,6 +163,11 @@ public class TenantServiceImpl implements ITenantService {
         return tenantMapper.toDto(updatedTenantEntity);
     }
 
+    /**
+     * Deletes an existing tenant.
+     * @param tenantId the id from the tenant to be deleted.
+     * @throws TenantNotFoundException if the tenant is not found based on the id provided.
+     */
     @Override
     public void deleteTenant(Long tenantId) {
         tenantRepository.findById(tenantId)
@@ -115,6 +176,11 @@ public class TenantServiceImpl implements ITenantService {
                 });
     }
 
+    /**
+     * Auxiliary method that validates a tenantDTO's data fields.
+     * @param tenantDto the tenantDTO to be validated.
+     * @throws InvalidTenantDataException if one of the fields from the tenantDTO is empty.
+     */
     private void validateTenantData(TenantDTO tenantDto) {
         List<String> nullFields = new ArrayList<>();
 
