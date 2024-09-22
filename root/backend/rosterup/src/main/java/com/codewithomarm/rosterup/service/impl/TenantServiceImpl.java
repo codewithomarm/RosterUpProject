@@ -2,6 +2,7 @@ package com.codewithomarm.rosterup.service.impl;
 
 import com.codewithomarm.rosterup.dto.TenantDTO;
 import com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException;
+import com.codewithomarm.rosterup.exceptions.InvalidTenantDataException;
 import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
 import com.codewithomarm.rosterup.mapper.TenantMapper;
 import com.codewithomarm.rosterup.model.entity.Tenant;
@@ -11,6 +12,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,7 +64,7 @@ public class TenantServiceImpl implements ITenantService {
     public TenantDTO createTenant(TenantDTO tenantDto) {
         // Validate if subdomain already exist
         if (tenantRepository.findBySubdomain(tenantDto.getSubdomain()).isPresent()) {
-            throw new IllegalArgumentException("Tenant already exists with subdomain: " + tenantDto.getSubdomain());
+            throw new DuplicateSubdomainException(tenantDto.getSubdomain());
         }
         // Convert from Tenant DTO to Tenant Entity
         Tenant tenantEntity = tenantMapper.toEntity(tenantDto);
@@ -81,9 +83,7 @@ public class TenantServiceImpl implements ITenantService {
     @Transactional
     public TenantDTO updateTenant(Long tenantId, TenantDTO tenantDto) {
         // validate tenantDto fields
-        if (tenantDto.getName()==null || tenantDto.getSubdomain()==null || tenantDto.getActive()==null){
-            throw new IllegalArgumentException("Tenant name, subdomain and isActive are required");
-        }
+        validateTenantData(tenantDto);
 
         // Fetch the existing tenant from the db using id parameter
         Tenant tenantEntity = tenantRepository.findById(tenantId)
@@ -113,5 +113,23 @@ public class TenantServiceImpl implements ITenantService {
                 .ifPresentOrElse(tenantRepository::delete, () -> {
                     throw new TenantNotFoundException(tenantId);
                 });
+    }
+
+    private void validateTenantData(TenantDTO tenantDto) {
+        List<String> nullFields = new ArrayList<>();
+
+        if (tenantDto.getName() == null){
+            nullFields.add("name");
+        }
+        if (tenantDto.getSubdomain() == null){
+            nullFields.add("subdomain");
+        }
+        if (tenantDto.getActive() == null){
+            nullFields.add("active");
+        }
+
+        if (!nullFields.isEmpty()){
+            throw new InvalidTenantDataException(nullFields);
+        }
     }
 }
