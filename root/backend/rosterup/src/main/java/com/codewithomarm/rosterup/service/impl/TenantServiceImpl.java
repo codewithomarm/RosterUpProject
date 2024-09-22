@@ -45,6 +45,7 @@ public class TenantServiceImpl implements ITenantService {
      * @param tenantId the ID of the tenant to retrieve
      * @return the TenantDTO of the found tenant
      * @throws TenantNotFoundException if the tenant is not found
+     * @author Omar Montoya @codewithomarm
      */
     @Override
     public TenantDTO getTenantById(Long tenantId) {
@@ -58,6 +59,7 @@ public class TenantServiceImpl implements ITenantService {
      * @param name the name of the tenants to retrieve
      * @param pageable Pagination information
      * @return a page of TenantDTOs
+     * @author Omar Montoya @codewithomarm
      */
     @Override
     public Page<TenantDTO> getTenantsByName(String name, Pageable pageable) {
@@ -69,6 +71,7 @@ public class TenantServiceImpl implements ITenantService {
      * @param subdomain the subdomain of the tenant to retrieve
      * @return the TenantDTO of the found tenant
      * @throws TenantNotFoundException if the tenant is not found
+     * @author Omar Montoya @codewithomarm
      */
     @Override
     public TenantDTO getTenantBySubdomain(String subdomain) {
@@ -81,6 +84,7 @@ public class TenantServiceImpl implements ITenantService {
      * Retrieves a paginated list of all active tenants.
      * @param pageable Pagination information: page number, page size, and sorting details.
      * @return a page containing tenantDTOs of active tenants.
+     * @author Omar Montoya @codewithomarm
      */
     @Override
     public Page<TenantDTO> getActiveTenants(Pageable pageable) {
@@ -91,6 +95,7 @@ public class TenantServiceImpl implements ITenantService {
      * Retrieves a paginated list of all inactive tenants.
      * @param pageable Pagination information: page number, page size, and sorting details.
      * @return a page containing tenantDTOs of inactive tenants.
+     * @author Omar Montoya @codewithomarm
      */
     @Override
     public Page<TenantDTO> getInactiveTenants(Pageable pageable) {
@@ -103,6 +108,7 @@ public class TenantServiceImpl implements ITenantService {
      * @return the created TenantDTO.
      * @throws InvalidTenantDataException if the tenant data is invalid or empty.
      * @throws DuplicateSubdomainException if the subdomain already exists.
+     * @author Omar Montoya @codewithomarm
      */
     @Override
     @Transactional
@@ -134,6 +140,7 @@ public class TenantServiceImpl implements ITenantService {
      * @return the updated tenantDTO.
      * @throws InvalidTenantDataException if the tenant data is invalid or empty.
      * @throws TenantNotFoundException if the tenant is not found based on the id provided.
+     * @author Omar Montoya @codewithomarm
      */
     @Override
     @Transactional
@@ -167,6 +174,7 @@ public class TenantServiceImpl implements ITenantService {
      * Deletes an existing tenant.
      * @param tenantId the id from the tenant to be deleted.
      * @throws TenantNotFoundException if the tenant is not found based on the id provided.
+     * @author Omar Montoya @codewithomarm
      */
     @Override
     public void deleteTenant(Long tenantId) {
@@ -180,6 +188,7 @@ public class TenantServiceImpl implements ITenantService {
      * Auxiliary method that validates a tenantDTO's data fields.
      * @param tenantDto the tenantDTO to be validated.
      * @throws InvalidTenantDataException if one of the fields from the tenantDTO is empty.
+     * @author Omar Montoya @codewithomarm
      */
     private void validateTenantData(TenantDTO tenantDto) {
         List<String> nullFields = new ArrayList<>();
