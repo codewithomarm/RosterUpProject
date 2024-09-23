@@ -1,7 +1,8 @@
 package com.codewithomarm.rosterup.controller;
 
 import com.codewithomarm.rosterup.dto.TenantDTO;
-import com.codewithomarm.rosterup.service.impl.TenantServiceImpl;
+import com.codewithomarm.rosterup.service.ITenantService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,10 +16,10 @@ import java.net.URI;
 @RequestMapping("roster-up/api/tenants")
 public class TenantController {
 
-    private final TenantServiceImpl tenantService;
+    private final ITenantService tenantService;
 
     @Autowired
-    public TenantController(TenantServiceImpl tenantService) {
+    public TenantController(ITenantService tenantService) {
         this.tenantService = tenantService;
     }
 
@@ -35,7 +36,7 @@ public class TenantController {
     }
 
     @PostMapping()
-    public ResponseEntity<TenantDTO> createTenant(@RequestBody TenantDTO tenantDTO) {
+    public ResponseEntity<TenantDTO> createTenant(@Valid @RequestBody TenantDTO tenantDTO) {
         TenantDTO createdTenant = tenantService.createTenant(tenantDTO);
 
         // Set the location header for the newly created tenant
