@@ -1,6 +1,7 @@
 package com.codewithomarm.rosterup.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class TenantDTO {
@@ -14,6 +15,7 @@ public class TenantDTO {
     @Size(max = 50, message = "Subdomain max length is 50 characters")
     private String subdomain;
 
+    @NotNull(message = "Active field is required")
     private Boolean isActive;
 
     public TenantDTO() {
