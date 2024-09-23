@@ -2,7 +2,6 @@ package com.codewithomarm.rosterup.service.impl;
 
 import com.codewithomarm.rosterup.dto.TenantDTO;
 import com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException;
-import com.codewithomarm.rosterup.exceptions.InvalidTenantDataException;
 import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
 import com.codewithomarm.rosterup.mapper.TenantMapper;
 import com.codewithomarm.rosterup.model.entity.Tenant;
@@ -13,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class TenantServiceImpl implements ITenantService {
@@ -106,16 +102,12 @@ public class TenantServiceImpl implements ITenantService {
      * Creates a new tenant.
      * @param tenantDto the tenantDTO containing the new tenant´s information.
      * @return the created TenantDTO.
-     * @throws InvalidTenantDataException if the tenant data is invalid or empty.
      * @throws DuplicateSubdomainException if the subdomain already exists.
      * @author Omar Montoya @codewithomarm
      */
     @Override
     @Transactional
     public TenantDTO createTenant(TenantDTO tenantDto) {
-        // Validate tenantDto fields
-        validateTenantData(tenantDto);
-
         // Validate if subdomain already exist
         if (tenantRepository.findBySubdomain(tenantDto.getSubdomain()).isPresent()) {
             throw new DuplicateSubdomainException(tenantDto.getSubdomain());
@@ -138,16 +130,12 @@ public class TenantServiceImpl implements ITenantService {
      * @param tenantId the id from the tenant to be updated.
      * @param tenantDto the tenantDTO containing the updated tenant´s information.
      * @return the updated tenantDTO.
-     * @throws InvalidTenantDataException if the tenant data is invalid or empty.
      * @throws TenantNotFoundException if the tenant is not found based on the id provided.
      * @author Omar Montoya @codewithomarm
      */
     @Override
     @Transactional
     public TenantDTO updateTenant(Long tenantId, TenantDTO tenantDto) {
-        // validate tenantDto fields
-        validateTenantData(tenantDto);
-
         // Fetch the existing tenant from the db using id parameter
         Tenant tenantEntity = tenantRepository.findById(tenantId)
                 .orElseThrow(() -> new TenantNotFoundException(tenantId));
@@ -182,29 +170,5 @@ public class TenantServiceImpl implements ITenantService {
                 .ifPresentOrElse(tenantRepository::delete, () -> {
                     throw new TenantNotFoundException(tenantId);
                 });
-    }
-
-    /**
-     * Auxiliary method that validates a tenantDTO's data fields.
-     * @param tenantDto the tenantDTO to be validated.
-     * @throws InvalidTenantDataException if one of the fields from the tenantDTO is empty.
-     * @author Omar Montoya @codewithomarm
-     */
-    private void validateTenantData(TenantDTO tenantDto) {
-        List<String> nullFields = new ArrayList<>();
-
-        if (tenantDto.getName() == null){
-            nullFields.add("name");
-        }
-        if (tenantDto.getSubdomain() == null){
-            nullFields.add("subdomain");
-        }
-        if (tenantDto.getActive() == null){
-            nullFields.add("active");
-        }
-
-        if (!nullFields.isEmpty()){
-            throw new InvalidTenantDataException(nullFields);
-        }
     }
 }
