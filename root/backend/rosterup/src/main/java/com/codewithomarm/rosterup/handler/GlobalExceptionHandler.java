@@ -2,17 +2,24 @@ package com.codewithomarm.rosterup.handler;
 
 import com.codewithomarm.rosterup.dto.response.ErrorResponse;
 import com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException;
-import com.codewithomarm.rosterup.exceptions.InvalidTenantDataException;
 import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.View;
 
 import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final View error;
+
+    public GlobalExceptionHandler(View error) {
+        this.error = error;
+    }
 
     @ExceptionHandler(TenantNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleTenantNotFoundException(TenantNotFoundException e) {
@@ -26,18 +33,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(InvalidTenantDataException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidTenantDataException(InvalidTenantDataException e) {
-        ErrorResponse error = new ErrorResponse(
-                "Invalid Tenant Data",
-                HttpStatus.BAD_REQUEST.value(),
-                e.getClass().getName()
-        );
-        setErrorDetails(e.getNullFields(), error);
-
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
     @ExceptionHandler(DuplicateSubdomainException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateSubdomainException(DuplicateSubdomainException e) {
         ErrorResponse error = new ErrorResponse(
@@ -49,9 +44,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    private void setErrorDetails(List<String> nullFields, ErrorResponse error){
-        for (String field : nullFields) {
-            error.addDetail("Field '"+field+"' is required");
-        }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+        List<String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .toList();
+
+        ErrorResponse errorResponse = new ErrorResponse(
+                "Validation Error",
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getClass().getName()
+        );
+        errors.forEach(errorResponse::addDetail);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
