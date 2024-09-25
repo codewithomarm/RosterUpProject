@@ -13,7 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("roster-up/api/tenants")
+@RequestMapping("api/roster-up/tenants")
 public class TenantController {
 
     private final ITenantService tenantService;
@@ -23,19 +23,19 @@ public class TenantController {
         this.tenantService = tenantService;
     }
 
-    @GetMapping()
+    @GetMapping() // GET http://localhost:8080/api/roster-up/tenants
     public ResponseEntity<Page<TenantDTO>> getAllTenants(Pageable pageable) {
         Page<TenantDTO> tenants = tenantService.getAllTenants(pageable);
         return ResponseEntity.ok(tenants);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TenantDTO> getTenantById(@PathVariable Long id) {
+    @GetMapping("/{id}") // GET http://localhost:8080/api/roster-up/tenants/{id}
+    public ResponseEntity<TenantDTO> getTenantById(@PathVariable String id) {
         TenantDTO tenantDTO = tenantService.getTenantById(id);
         return ResponseEntity.ok(tenantDTO);
     }
 
-    @PostMapping()
+    @PostMapping() // POST http://localhost:8080/api/roster-up/tenants
     public ResponseEntity<TenantDTO> createTenant(@Valid @RequestBody TenantDTO tenantDTO) {
         TenantDTO createdTenant = tenantService.createTenant(tenantDTO);
 
@@ -47,5 +47,23 @@ public class TenantController {
                 .toUri();
 
         return ResponseEntity.created(location).body(createdTenant);
+    }
+
+    @GetMapping("/search/name") // GET http://localhost:8080/api/roster-up/tenants/search/name?name=tenantName
+    public ResponseEntity<Page<TenantDTO>> getTenantsByName(@RequestParam String name, Pageable pageable) {
+        Page<TenantDTO> tenants = tenantService.getTenantsByName(name, pageable);
+        return ResponseEntity.ok(tenants);
+    }
+
+    @GetMapping("7search/active")
+    public ResponseEntity<Page<TenantDTO>> getActiveTenants(@RequestParam Boolean active, Pageable pageable) {
+        Page<TenantDTO> tenants = tenantService.getActiveTenants(pageable);
+        return ResponseEntity.ok(tenants);
+    }
+
+    @GetMapping("/subdomains/{subdomainName}") // GET http://localhost:8080/api/roster-up/tenants/subdomains/{subdomainName}
+    public ResponseEntity<TenantDTO> getTenantBySubdomain(@PathVariable String subdomainName) {
+        TenantDTO tenantDTO = tenantService.getTenantBySubdomain(subdomainName);
+        return ResponseEntity.ok(tenantDTO);
     }
 }
