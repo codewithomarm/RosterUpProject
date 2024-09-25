@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface TenantRepository extends JpaRepository<Tenant, Long> {
     // Fetch tenant by name
+    @Query("SELECT t FROM Tenant t WHERE LOWER(REPLACE(t.name, ' ', '-')) = LOWER(:name)")
     Page<Tenant> findByName(String name, Pageable pageable);
 
     // Fetch tenant by subdomain
