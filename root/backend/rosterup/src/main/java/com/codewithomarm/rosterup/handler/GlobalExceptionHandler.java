@@ -2,6 +2,7 @@ package com.codewithomarm.rosterup.handler;
 
 import com.codewithomarm.rosterup.dto.response.ErrorResponse;
 import com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException;
+import com.codewithomarm.rosterup.exceptions.InvalidTenantParameterException;
 import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,18 @@ import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InvalidTenantParameterException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTenantParameterException(InvalidTenantParameterException e) {
+        ErrorResponse error = new ErrorResponse(
+                "Invalid Tenant Parameter",
+                HttpStatus.BAD_REQUEST.value(),
+                e.getClass().getName()
+        );
+        error.addDetail(e.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(TenantNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleTenantNotFoundException(TenantNotFoundException e) {
