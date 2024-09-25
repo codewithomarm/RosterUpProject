@@ -2,6 +2,7 @@ package com.codewithomarm.rosterup.service.impl;
 
 import com.codewithomarm.rosterup.dto.TenantDTO;
 import com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException;
+import com.codewithomarm.rosterup.exceptions.InvalidTenantParameterException;
 import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
 import com.codewithomarm.rosterup.mapper.TenantMapper;
 import com.codewithomarm.rosterup.model.entity.Tenant;
@@ -41,11 +42,23 @@ public class TenantServiceImpl implements ITenantService {
      * @param tenantId the ID of the tenant to retrieve
      * @return the TenantDTO of the found tenant
      * @throws TenantNotFoundException if the tenant is not found
+     * @throws InvalidTenantParameterException if the tenant id is empty or less than 0
      * @author Omar Montoya @codewithomarm
      */
     @Override
-    public TenantDTO getTenantById(Long tenantId) {
-        return tenantRepository.findById(tenantId)
+    public TenantDTO getTenantById(String tenantId) {
+        // Parse tenant id from String to Long
+        Long id;
+        try {
+            id = Long.parseLong(tenantId);
+            if (id <= 0) {
+                throw new InvalidTenantParameterException("tenant id", "cannot be negative or zero");
+            }
+        } catch(NumberFormatException e) {
+            throw new InvalidTenantParameterException("tenant id", "needs to be numeric");
+        }
+
+        return tenantRepository.findById(id)
                 .map(tenantMapper::toDto)
                 .orElseThrow(() -> new TenantNotFoundException(tenantId));
     }
