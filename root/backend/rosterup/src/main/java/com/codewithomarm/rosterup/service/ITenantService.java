@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ITenantService {
     Page<TenantDTO> getAllTenants(Pageable pageable);
-    TenantDTO getTenantById(Long tenantId);
+    TenantDTO getTenantById(String tenantId);
     Page<TenantDTO> getTenantsByName(String name, Pageable pageable);
     TenantDTO getTenantBySubdomain(String subdomain);
     Page<TenantDTO> getActiveTenants(Pageable pageable);
