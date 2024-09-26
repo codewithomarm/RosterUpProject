@@ -12,6 +12,6 @@ public interface ITenantService {
     Page<TenantDTO> getActiveTenants(Pageable pageable);
     Page<TenantDTO> getInactiveTenants(Pageable pageable);
     TenantDTO createTenant(TenantDTO tenant);
-    TenantDTO updateTenant(Long tenantId, TenantDTO tenant);
-    void deleteTenant(Long tenantId);
+    TenantDTO updateTenant(String tenantId, TenantDTO tenant);
+    void deleteTenant(String tenantId);
 }
