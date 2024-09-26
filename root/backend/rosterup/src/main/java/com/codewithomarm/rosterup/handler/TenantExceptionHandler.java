@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.List;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class TenantExceptionHandler {
 
     @ExceptionHandler(InvalidTenantParameterException.class)
     public ResponseEntity<ErrorResponse> handleInvalidTenantParameterException(InvalidTenantParameterException e) {
