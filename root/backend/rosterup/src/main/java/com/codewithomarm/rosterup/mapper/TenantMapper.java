@@ -1,7 +1,7 @@
 package com.codewithomarm.rosterup.mapper;
 
 import com.codewithomarm.rosterup.dto.TenantDTO;
-import com.codewithomarm.rosterup.model.entity.Tenant;
+import com.codewithomarm.rosterup.model.Tenant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
