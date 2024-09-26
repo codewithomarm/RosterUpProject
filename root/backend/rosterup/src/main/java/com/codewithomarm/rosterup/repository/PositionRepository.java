@@ -1,6 +1,6 @@
 package com.codewithomarm.rosterup.repository;
 
-import com.codewithomarm.rosterup.model.entity.Position;
+import com.codewithomarm.rosterup.model.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
