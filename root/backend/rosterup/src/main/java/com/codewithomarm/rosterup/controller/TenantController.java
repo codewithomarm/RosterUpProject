@@ -49,15 +49,33 @@ public class TenantController {
         return ResponseEntity.created(location).body(createdTenant);
     }
 
+    @PutMapping("/{id}") // PUT http://localhost:8080/api/roster-up/tenants/{id}
+    public ResponseEntity<TenantDTO> updateTenant(@PathVariable String id, @Valid @RequestBody TenantDTO tenantDTO) {
+        TenantDTO updatedTenant = tenantService.updateTenant(id, tenantDTO);
+        return ResponseEntity.ok(updatedTenant);
+    }
+
+    @DeleteMapping("/{id}") // DELETE http://localhost:8080/api/roster-up/tenants/{id}
+    public ResponseEntity<Void> deleteTenant(@PathVariable String id) {
+        tenantService.deleteTenant(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/search/name") // GET http://localhost:8080/api/roster-up/tenants/search/name?name=tenantName
     public ResponseEntity<Page<TenantDTO>> getTenantsByName(@RequestParam String name, Pageable pageable) {
         Page<TenantDTO> tenants = tenantService.getTenantsByName(name, pageable);
         return ResponseEntity.ok(tenants);
     }
 
-    @GetMapping("7search/active")
-    public ResponseEntity<Page<TenantDTO>> getActiveTenants(@RequestParam Boolean active, Pageable pageable) {
-        Page<TenantDTO> tenants = tenantService.getActiveTenants(pageable);
+    @GetMapping("7search/active") // GET http://localhost:8080/api/roster-up/tenants/search/active?active={true/false}
+    public ResponseEntity<Page<TenantDTO>> getTenantsByActiveStatus(
+            @RequestParam(name="active", required=true) Boolean isActive, Pageable pageable) {
+        Page<TenantDTO> tenants;
+        if (isActive) {
+            tenants = tenantService.getActiveTenants(pageable);
+        } else {
+            tenants = tenantService.getInactiveTenants(pageable);
+        }
         return ResponseEntity.ok(tenants);
     }
 
