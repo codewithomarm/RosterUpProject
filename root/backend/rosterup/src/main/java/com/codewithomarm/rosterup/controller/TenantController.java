@@ -5,6 +5,12 @@ import com.codewithomarm.rosterup.dto.request.tenant.CreateTenantRequest;
 import com.codewithomarm.rosterup.dto.request.tenant.UpdateTenantRequest;
 import com.codewithomarm.rosterup.dto.response.TenantResponse;
 import com.codewithomarm.rosterup.service.ITenantService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +33,7 @@ import java.net.URI;
  */
 @RestController
 @RequestMapping("api/roster-up/tenants")
+@Tag(name = "Tenant", description = "Tenant management APIs")
 public class TenantController {
 
     private static final Logger logger = LoggerFactory.getLogger(TenantController.class);
@@ -52,7 +59,15 @@ public class TenantController {
      * @param pageable Pagination information.
      * @return ResponseEntity containing a paged model of tenant responses.
      */
-    @GetMapping() // GET http://localhost:8080/api/roster-up/tenants
+    @Operation(summary = "Get all tenants", description = "Get a list of all tenants with pagination")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tenants",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PagedModel.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid page or size parameter",
+                    content = @Content)
+    })
+    @GetMapping()
     public ResponseEntity<PagedModel<EntityModel<TenantResponse>>> getAllTenants(Pageable pageable) {
         logger.info("Controller: Fetching all tenants with pagination: {}", pageable);
 
@@ -70,7 +85,15 @@ public class TenantController {
      * @param id The ID of the tenant to retrieve
      * @return ResponseEntity containing the tenant response.
      */
-    @GetMapping("/{id}") // GET http://localhost:8080/api/roster-up/tenants/{id}
+    @Operation(summary = "Get a tenant by ID", description = "Get a specific tenant by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the tenant",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TenantResponse.class)) }),
+            @ApiResponse(responseCode = "404", description = "Tenant not found",
+                    content = @Content)
+    })
+    @GetMapping("/{id}")
     public ResponseEntity<EntityModel<TenantResponse>> getTenantById(@PathVariable String id) {
         logger.info("Controller: Fetching tenant with id: {}", id);
 
@@ -88,7 +111,15 @@ public class TenantController {
      * @param request The create tenant request containing tenant details.
      * @return ResponseEntity containing the created tenant response.
      */
-    @PostMapping() // POST http://localhost:8080/api/roster-up/tenants
+    @Operation(summary = "Create a new tenant", description = "Create a new tenant with the provided information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Tenant created successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TenantResponse.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content)
+    })
+    @PostMapping()
     public ResponseEntity<EntityModel<TenantResponse>> createTenant(@Valid @RequestBody CreateTenantRequest request) {
         logger.info("Controller: Creating new tenant with name: {}", request.getName());
 
@@ -114,7 +145,17 @@ public class TenantController {
      * @param request The update tenant request containing updated tenant details.
      * @return ResponseEntity containing the updated tenant response.
      */
-    @PutMapping("/{id}") // PUT http://localhost:8080/api/roster-up/tenants/{id}
+    @Operation(summary = "Update an existing tenant", description = "Update an existing tenant with the provided information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tenant updated successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TenantResponse.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Tenant not found",
+                    content = @Content)
+    })
+    @PutMapping("/{id}")
     public ResponseEntity<EntityModel<TenantResponse>> updateTenant(@PathVariable String id,
                                                                     @Valid @RequestBody UpdateTenantRequest request) {
         logger.info("Controller: Updating tenant with id: {}", id);
@@ -133,7 +174,13 @@ public class TenantController {
      * @param id The ID of the tenant to delete.
      * @return ResponseEntity with no content.
      */
-    @DeleteMapping("/{id}") // DELETE http://localhost:8080/api/roster-up/tenants/{id}
+    @Operation(summary = "Delete a tenant", description = "Delete a tenant by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Tenant deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Tenant not found",
+                    content = @Content)
+    })
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTenant(@PathVariable String id) {
         logger.info("Controller: Deleting tenant with id: {}", id);
 
@@ -150,7 +197,15 @@ public class TenantController {
      * @param pageable Pagination information.
      * @return ResponseEntity containing a paged model of tenant responses.
      */
-    @GetMapping("/search/name") // GET http://localhost:8080/api/roster-up/tenants/search/name?name=tenantName
+    @Operation(summary = "Search tenants by name", description = "Search for tenants by name with pagination")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tenants",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PagedModel.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content)
+    })
+    @GetMapping("/search/name")
     public ResponseEntity<PagedModel<EntityModel<TenantResponse>>> getTenantsByName(@RequestParam String name,
                                                                                     @PageableDefault(size = 20) Pageable pageable) {
         logger.info("Controller: Searching tenants by name: {} with pagination: {}", name, pageable);
@@ -170,7 +225,15 @@ public class TenantController {
      * @param pageable Pagination information.
      * @return ResponseEntity containing a paged model of tenant responses.
      */
-    @GetMapping("/search/active") // GET http://localhost:8080/api/roster-up/tenants/search/active?active={true/false}
+    @Operation(summary = "Get tenants by active status", description = "Get tenants by their active status with pagination")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of tenants",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PagedModel.class)) }),
+            @ApiResponse(responseCode = "400", description = "Invalid input",
+                    content = @Content)
+    })
+    @GetMapping("/search/active")
     public ResponseEntity<PagedModel<EntityModel<TenantResponse>>> getTenantsByActiveStatus(
             @RequestParam(name="active", required=true) Boolean isActive,
             @PageableDefault(size = 20) Pageable pageable) {
@@ -195,7 +258,15 @@ public class TenantController {
      * @param subdomainName The subdomain of the tenant to retrieve.
      * @return ResponseEntity containing the tenant response.
      */
-    @GetMapping("/subdomains/{subdomainName}") // GET http://localhost:8080/api/roster-up/tenants/subdomains/{subdomainName}
+    @Operation(summary = "Get a tenant by subdomain", description = "Get a specific tenant by its subdomain")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved the tenant",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TenantResponse.class)) }),
+            @ApiResponse(responseCode = "404", description = "Tenant not found",
+                    content = @Content)
+    })
+    @GetMapping("/subdomains/{subdomainName}")
     public ResponseEntity<EntityModel<TenantResponse>> getTenantBySubdomain(@PathVariable String subdomainName) {
         logger.info("Controller: Fetching tenant with subdomain: {}", subdomainName);
 
