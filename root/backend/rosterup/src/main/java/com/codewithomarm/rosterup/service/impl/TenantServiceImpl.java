@@ -17,6 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of ITenantService interface.
+ * This class provides the business logic for tenant-related operations.
+ */
 @Service
 public class TenantServiceImpl implements ITenantService {
 
@@ -24,100 +28,119 @@ public class TenantServiceImpl implements ITenantService {
 
     private final TenantRepository tenantRepository;
 
+    /**
+     * Constructs a new TenantServiceImpl with the specified TenantRepository dependency.
+     * @param tenantRepository The repository for tenant-related database operations.
+     */
     @Autowired
     public TenantServiceImpl(TenantRepository tenantRepository) {
         this.tenantRepository = tenantRepository;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<TenantResponse> getAllTenants(Pageable pageable) {
-        logger.info("Retrieving all tenants with pagination: {}", pageable);
+        logger.info("Service: Retrieving all tenants with pagination: {}", pageable);
 
         Page<Tenant> allTenants = tenantRepository.findAll(pageable);
         Page<TenantResponse> allTenantsResponse = allTenants.map(this::convertToResponse);
 
-        logger.info("Retrieved {} tenants", allTenantsResponse.getTotalElements());
+        logger.info("Service: Retrieved {} tenants from getAllTenants", allTenantsResponse.getTotalElements());
         return allTenantsResponse;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TenantResponse getTenantById(String id) {
-        logger.info("Attempting to retrieve tenant with ID: {}", id);
+        logger.info("Service: Attempting to retrieve tenant with ID: {}", id);
         Long tenantId = validateAndParseTenantId(id);
 
         Tenant tenantById = tenantRepository.findById(tenantId)
                 .orElseThrow(() -> {
-                    logger.error("Tenant not found with ID: {}", tenantId);
+                    logger.error("Service: Tenant not found with ID: {} from getTenantById", tenantId);
                     return new TenantNotFoundException(tenantId);
                 });
 
         TenantResponse tenantResponse = convertToResponse(tenantById);
 
-        logger.info("Retrieved tenant with ID: {}", tenantId);
+        logger.info("Service: Retrieved tenant with ID: {}", tenantId);
         return tenantResponse;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<TenantResponse> getTenantsByName(String name, Pageable pageable) {
-        logger.info("Retrieving tenants by name: {} with pagination: {}", name, pageable);
+        logger.info("Service: Retrieving tenants by name: {} with pagination: {}", name, pageable);
 
         Page<Tenant> tenantsByName = tenantRepository.findByName(name, pageable);
         Page<TenantResponse> tenantsByNameResponsePage = tenantsByName.map(this::convertToResponse);
 
-        logger.info("Retrieved {} tenants with name: {}", tenantsByNameResponsePage.getTotalElements(), name);
+        logger.info("Service: Retrieved {} tenants with name: {}", tenantsByNameResponsePage.getTotalElements(), name);
         return tenantsByNameResponsePage;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TenantResponse getTenantBySubdomain(String subdomain) {
-        logger.info("Attempting to retrieve tenant with subdomain: {}", subdomain);
+        logger.info("Service: Attempting to retrieve tenant with subdomain: {}", subdomain);
         Tenant tenantBySubdomain = tenantRepository.findBySubdomain(subdomain)
                 .orElseThrow(() -> {
-                    logger.error("Tenant not found with subdomain: {}", subdomain);
+                    logger.error("Service: Tenant not found with subdomain: {}", subdomain);
                     return new TenantNotFoundException(subdomain);
                 });
 
         TenantResponse tenantBySubdomainResponse = convertToResponse(tenantBySubdomain);
 
-        logger.info("Retrieved tenant with subdomain: {}", subdomain);
+        logger.info("Service: Retrieved tenant with subdomain: {}", subdomain);
         return tenantBySubdomainResponse;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<TenantResponse> getActiveTenants(Pageable pageable) {
-        logger.info("Retrieving active tenants with pagination: {}", pageable);
+        logger.info("Service: Retrieving active tenants with pagination: {}", pageable);
 
         Page<Tenant> activeTenants = tenantRepository.findAllActive(pageable);
         Page<TenantResponse> activeTenantsResponsePage = activeTenants.map(this::convertToResponse);
 
-        logger.info("Retrieved {} active tenants", activeTenantsResponsePage.getTotalElements());
+        logger.info("Service: Retrieved {} active tenants", activeTenantsResponsePage.getTotalElements());
         return activeTenantsResponsePage;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<TenantResponse> getInactiveTenants(Pageable pageable) {
-        logger.info("Retrieving inactive tenants with pagination: {}", pageable);
+        logger.info("Service: Retrieving inactive tenants with pagination: {}", pageable);
 
         Page<Tenant> inactiveTenants = tenantRepository.findAllInactive(pageable);
         Page<TenantResponse> inactiveTenantsResponsePage = inactiveTenants.map(this::convertToResponse);
 
-        logger.info("Retrieved {} inactive tenants", inactiveTenantsResponsePage.getTotalElements());
+        logger.info("Service: Retrieved {} inactive tenants", inactiveTenantsResponsePage.getTotalElements());
         return inactiveTenantsResponsePage;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public TenantResponse createTenant(CreateTenantRequest request) {
-        logger.info("Attempting to create a new tenant with subdomain: {}", request.getSubdomain());
+        logger.info("Service: Attempting to create a new tenant with subdomain: {}", request.getSubdomain());
 
         if (tenantRepository.findBySubdomain(request.getSubdomain()).isPresent()) {
-            logger.error("Subdomain already exists: {}", request.getSubdomain());
+            logger.error("Service: Subdomain already exists: {}", request.getSubdomain());
             throw new DuplicateSubdomainException(request.getSubdomain());
         }
 
@@ -131,29 +154,31 @@ public class TenantServiceImpl implements ITenantService {
         Tenant savedTenantEntity = tenantRepository.save(tenantEntity);
 
         // Convert saved tenant entity to dto and return
-        logger.info("Successfully created new tenant with ID: {}", savedTenantEntity.getId());
+        logger.info("Service: Successfully created new tenant with ID: {}", savedTenantEntity.getId());
 
         return convertToResponse(savedTenantEntity);
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional
     public TenantResponse updateTenant(String id, UpdateTenantRequest request) {
-        logger.info("Attempting to update tenant with ID: {}", id);
+        logger.info("Service: Attempting to update tenant with ID: {}", id);
         Long tenantId = validateAndParseTenantId(id);
 
         // Fetch the existing tenant from the db using id parameter
         Tenant tenantEntity = tenantRepository.findById(tenantId)
                 .orElseThrow(() -> {
-                    logger.error("Tenant not found with ID: {}", tenantId);
+                    logger.error("Service: Tenant not found with ID: {} from updateTenant", tenantId);
                     return new TenantNotFoundException(tenantId);
                 });
 
         // Verify if the subdomain is being changed and if it's already in use by other tenant
         if (!tenantEntity.getSubdomain().equals(request.getSubdomain()) &&
             tenantRepository.findBySubdomain(request.getSubdomain()).isPresent()) {
-            logger.error("Subdomain already in use: {}", request.getSubdomain());
+            logger.error("Service: Subdomain already in use: {}", request.getSubdomain());
             throw new DuplicateSubdomainException(request.getSubdomain());
         }
 
@@ -168,53 +193,54 @@ public class TenantServiceImpl implements ITenantService {
         // Convert and return updated tenant entity to dto
         TenantResponse updatedTenantResponse = convertToResponse(updatedTenantEntity);
 
-        logger.info("Successfully updated tenant with ID: {}", updatedTenantResponse.getId());
+        logger.info("Service: Successfully updated tenant with ID: {}", updatedTenantResponse.getId());
         return updatedTenantResponse;
     }
 
     /**
-     * Deletes an existing tenant.
-     *
-     * @param id the id from the tenant to be deleted.
-     * @throws TenantNotFoundException if the tenant is not found based on the id provided.
-     * @author Omar Montoya @codewithomarm
+     * {@inheritDoc}
      */
     @Override
     public void deleteTenant(String id) {
-        logger.info("Attempting to delete tenant with ID: {}", id);
+        logger.info("Service: Attempting to delete tenant with ID: {}", id);
         Long tenantId = validateAndParseTenantId(id);
 
         tenantRepository.findById(tenantId)
                 .ifPresentOrElse(tenant -> {
                     tenantRepository.delete(tenant);
-                    logger.info("Successfully deleted tenant with ID: {}", tenantId);
+                    logger.info("Service: Successfully deleted tenant with ID: {}", tenantId);
                 }, () -> {
-                    logger.error("Tenant not found with ID: {}", tenantId);
+                    logger.error("Service: Tenant not found with ID: {} from deleteTenant", tenantId);
                     throw new TenantNotFoundException(tenantId);
                 });
     }
 
     /**
-     * Validates and parses the tenant ID from String to Long
+     * Validates and parses the tenant ID from a String to a Long.
      *
-     * @param id the ID of the tenant as a String
-     * @return the parse Long ID
-     * @throws InvalidTenantParameterException if the ID is invalid
+     * @param id The ID of the tenant as a String.
+     * @return the parsed Long ID.
+     * @throws InvalidTenantParameterException if the ID is invalid or not numeric.
      */
     private Long validateAndParseTenantId(String id) {
         try {
             Long tenantId = Long.parseLong(id);
             if (tenantId <= 0) {
-                logger.error("Invalid tenant ID: {}", id);
+                logger.error("Service: Invalid tenant ID: {}", id);
                 throw new InvalidTenantParameterException("tenant id", "cannot be negative or zero");
             }
             return tenantId;
         } catch(NumberFormatException e) {
-            logger.error("Invalid tenant ID format: {}", id);
+            logger.error("Service: Invalid tenant ID format: {}", id);
             throw new InvalidTenantParameterException("tenant id", "needs to be numeric");
         }
     }
 
+    /**
+     * Converts a Tenant entity model to a TenantResponse DTO.
+     * @param tenant The tenant entity model to convert.
+     * @return the converted TenantResponse DTO.
+     */
     private TenantResponse convertToResponse(Tenant tenant){
         TenantResponse response = new TenantResponse();
         response.setId(tenant.getId());
