@@ -1,6 +1,6 @@
-package com.codewithomarm.rosterup.repository;
+package com.codewithomarm.rosterup.tenant.v1.repository;
 
-import com.codewithomarm.rosterup.model.Tenant;
+import com.codewithomarm.rosterup.tenant.v1.model.Tenant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

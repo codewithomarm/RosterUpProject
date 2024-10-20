@@ -1,10 +1,11 @@
-package com.codewithomarm.rosterup.dto.request.tenant;
+package com.codewithomarm.rosterup.tenant.v1.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class CreateTenantRequest {
+public class UpdateTenantRequest {
 
     @NotBlank(message = "Name field is required")
     @Size(min = 2, max = 100, message = "Name max length must be between 2 and 100 characters")
@@ -17,9 +18,10 @@ public class CreateTenantRequest {
                     "start and end with a letter or number")
     private String subdomain;
 
+    @NotNull(message = "Active field is required")
     private Boolean isActive;
 
-    public CreateTenantRequest() {
+    public UpdateTenantRequest() {
     }
 
     public String getName() {
@@ -48,7 +50,7 @@ public class CreateTenantRequest {
 
     @Override
     public String toString() {
-        return "CreateTenantRequest{" +
+        return "UpdateTenantRequest{" +
                 "name='" + name + '\'' +
                 ", subdomain='" + subdomain + '\'' +
                 ", isActive=" + isActive +

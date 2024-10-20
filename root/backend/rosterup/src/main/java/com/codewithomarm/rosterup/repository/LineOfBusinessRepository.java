@@ -1,5 +1,5 @@
 package com.codewithomarm.rosterup.repository;
-
+/*
 import com.codewithomarm.rosterup.model.LineOfBusiness;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,3 +9,5 @@ public interface LineOfBusinessRepository extends JpaRepository<LineOfBusiness, 
     // Fetch Line Of Business by name and tenant id
     Optional<LineOfBusiness> findByNameAndTenantId(String name, Long tenantId);
 }
+
+ */

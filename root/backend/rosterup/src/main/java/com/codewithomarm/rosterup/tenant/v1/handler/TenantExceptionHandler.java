@@ -1,9 +1,9 @@
-package com.codewithomarm.rosterup.handler;
+package com.codewithomarm.rosterup.tenant.v1.handler;
 
-import com.codewithomarm.rosterup.dto.response.ErrorResponse;
-import com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException;
-import com.codewithomarm.rosterup.exceptions.InvalidTenantParameterException;
-import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
+import com.codewithomarm.rosterup.tenant.v1.dto.response.ErrorResponse;
+import com.codewithomarm.rosterup.tenant.v1.exception.DuplicateSubdomainException;
+import com.codewithomarm.rosterup.tenant.v1.exception.InvalidTenantParameterException;
+import com.codewithomarm.rosterup.tenant.v1.exception.TenantNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

@@ -1,7 +1,9 @@
 package com.codewithomarm.rosterup.model;
 
+import com.codewithomarm.rosterup.tenant.v1.model.Tenant;
 import jakarta.persistence.*;
 
+/*
 @Entity
 public class LineOfBusiness {
     @Id
@@ -42,3 +44,4 @@ public class LineOfBusiness {
         this.tenant = tenant;
     }
 }
+*/

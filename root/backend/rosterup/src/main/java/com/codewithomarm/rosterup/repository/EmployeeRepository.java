@@ -1,5 +1,5 @@
 package com.codewithomarm.rosterup.repository;
-
+/*
 import com.codewithomarm.rosterup.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -44,3 +44,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // Fetch employees by tenant id
     List<Employee> findByTenantId(Long tenantId);
 }
+
+ */

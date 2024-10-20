@@ -1,10 +1,10 @@
-package com.codewithomarm.rosterup.controller;
+package com.codewithomarm.rosterup.tenant.v1.controller;
 
-import com.codewithomarm.rosterup.assembler.TenantPagedResourcesAssembler;
-import com.codewithomarm.rosterup.dto.request.tenant.CreateTenantRequest;
-import com.codewithomarm.rosterup.dto.request.tenant.UpdateTenantRequest;
-import com.codewithomarm.rosterup.dto.response.TenantResponse;
-import com.codewithomarm.rosterup.service.ITenantService;
+import com.codewithomarm.rosterup.tenant.v1.assembler.TenantPagedResourcesAssembler;
+import com.codewithomarm.rosterup.tenant.v1.dto.request.CreateTenantRequest;
+import com.codewithomarm.rosterup.tenant.v1.dto.request.UpdateTenantRequest;
+import com.codewithomarm.rosterup.tenant.v1.dto.response.TenantResponse;
+import com.codewithomarm.rosterup.tenant.v1.service.ITenantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,11 +32,11 @@ import java.net.URI;
  * as well as search functionalities.
  */
 @RestController
-@RequestMapping("api/roster-up/tenants")
+@RequestMapping("api/roster-up/v1/tenants")
 @Tag(name = "Tenant", description = "Tenant management APIs")
-public class TenantController {
+public class TenantControllerV1 {
 
-    private static final Logger logger = LoggerFactory.getLogger(TenantController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TenantControllerV1.class);
 
     private final ITenantService tenantService;
     private final TenantPagedResourcesAssembler tenantPagedResourcesAssembler;
@@ -48,7 +48,7 @@ public class TenantController {
      * @param tenantPagedResourcesAssembler The assembler for creating paged resources of tenants.
      */
     @Autowired
-    public TenantController(ITenantService tenantService, TenantPagedResourcesAssembler tenantPagedResourcesAssembler) {
+    public TenantControllerV1(ITenantService tenantService, TenantPagedResourcesAssembler tenantPagedResourcesAssembler) {
         this.tenantService = tenantService;
         this.tenantPagedResourcesAssembler = tenantPagedResourcesAssembler;
     }

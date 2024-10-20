@@ -1,9 +1,11 @@
 package com.codewithomarm.rosterup.model;
 
+import com.codewithomarm.rosterup.tenant.v1.model.Tenant;
 import jakarta.persistence.*;
 
 import java.util.List;
 
+/*
 @Entity
 public class Employee {
     @Id
@@ -169,3 +171,5 @@ public class Employee {
         this.rosters = rosters;
     }
 }
+
+ */

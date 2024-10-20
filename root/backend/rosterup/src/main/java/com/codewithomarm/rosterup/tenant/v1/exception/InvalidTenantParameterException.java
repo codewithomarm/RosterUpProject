@@ -1,4 +1,4 @@
-package com.codewithomarm.rosterup.exceptions;
+package com.codewithomarm.rosterup.tenant.v1.exception;
 
 import java.io.Serial;
 

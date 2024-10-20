@@ -1,8 +1,10 @@
-package com.codewithomarm.rosterup.service;
+package com.codewithomarm.rosterup.tenant.v1.service;
 
-import com.codewithomarm.rosterup.dto.request.tenant.CreateTenantRequest;
-import com.codewithomarm.rosterup.dto.request.tenant.UpdateTenantRequest;
-import com.codewithomarm.rosterup.dto.response.TenantResponse;
+import com.codewithomarm.rosterup.tenant.v1.dto.request.CreateTenantRequest;
+import com.codewithomarm.rosterup.tenant.v1.dto.request.UpdateTenantRequest;
+import com.codewithomarm.rosterup.tenant.v1.dto.response.TenantResponse;
+import com.codewithomarm.rosterup.tenant.v1.exception.DuplicateSubdomainException;
+import com.codewithomarm.rosterup.tenant.v1.exception.TenantNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -25,7 +27,7 @@ public interface ITenantService {
      *
      * @param tenantId The ID of the tenant to retrieve.
      * @return The TenantResponse object for the specified tenant.
-     * @throws com.codewithomarm.rosterup.exceptions.TenantNotFoundException if the tenant is not found.
+     * @throws TenantNotFoundException if the tenant is not found.
      */
     TenantResponse getTenantById(String tenantId);
 
@@ -43,7 +45,7 @@ public interface ITenantService {
      *
      * @param subdomain The subdomain of the tenant to retrieve.
      * @return The TenantResponse object for the specified subdomain.
-     * @throws com.codewithomarm.rosterup.exceptions.TenantNotFoundException if no tenant is found with the given subdomain.
+     * @throws TenantNotFoundException if no tenant is found with the given subdomain.
      */
     TenantResponse getTenantBySubdomain(String subdomain);
 
@@ -68,7 +70,7 @@ public interface ITenantService {
      *
      * @param request The CreateTenantRequest object containing the new tenant´s details.
      * @return The TenantResponse object for the newly created tenant.
-     * @throws com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException if the subdomain already exists.
+     * @throws DuplicateSubdomainException if the subdomain already exists.
      */
     TenantResponse createTenant(CreateTenantRequest request);
 
@@ -77,8 +79,8 @@ public interface ITenantService {
      * @param tenantId The ID of the tenant to update.
      * @param request The UpdateTenantRequest object containing the updated tenant details.
      * @return The TenantResponse object for the updated tenant.
-     * @throws com.codewithomarm.rosterup.exceptions.TenantNotFoundException if the tenant is not found.
-     * @throws com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException if the subdomain already exists for another tenant.
+     * @throws TenantNotFoundException if the tenant is not found.
+     * @throws DuplicateSubdomainException if the subdomain already exists for another tenant.
      */
     TenantResponse updateTenant(String tenantId, UpdateTenantRequest request);
 
@@ -86,7 +88,7 @@ public interface ITenantService {
      * Deletes a tenant by its ID.
      *
      * @param tenantId The ID of the tenant to delete.
-     * @throws com.codewithomarm.rosterup.exceptions.TenantNotFoundException if the tenant is not found.
+     * @throws TenantNotFoundException if the tenant is not found.
      */
     void deleteTenant(String tenantId);
 }

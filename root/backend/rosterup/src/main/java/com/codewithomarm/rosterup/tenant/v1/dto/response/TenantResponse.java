@@ -1,4 +1,4 @@
-package com.codewithomarm.rosterup.dto.response;
+package com.codewithomarm.rosterup.tenant.v1.dto.response;
 
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;

@@ -1,5 +1,5 @@
 package com.codewithomarm.rosterup.repository;
-
+/*
 import com.codewithomarm.rosterup.model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,3 +20,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.isActive = false AND a.tenant.id = :tenantId")
     List<Account> findAllInactive(@Param("tenantId") Long tenantId);
 }
+
+ */

@@ -1,4 +1,4 @@
-package com.codewithomarm.rosterup.model;
+package com.codewithomarm.rosterup.tenant.v1.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name="tenants", schema = "tenant")
 public class Tenant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +31,7 @@ public class Tenant {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tenant")
     private List<Account> accounts;
 
@@ -44,6 +46,8 @@ public class Tenant {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tenant")
     private List<Roster> rosters;
+
+     */
 
     public Tenant() {
     }
@@ -98,6 +102,7 @@ public class Tenant {
         this.updatedAt = updatedAt;
     }
 
+    /*
     public List<Account> getAccounts() {
         return accounts;
     }
@@ -137,4 +142,6 @@ public class Tenant {
     public void setRosters(List<Roster> rosters) {
         this.rosters = rosters;
     }
+
+     */
 }

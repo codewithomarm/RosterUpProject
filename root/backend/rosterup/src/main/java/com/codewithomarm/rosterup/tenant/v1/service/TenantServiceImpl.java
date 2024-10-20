@@ -1,14 +1,13 @@
-package com.codewithomarm.rosterup.service.impl;
+package com.codewithomarm.rosterup.tenant.v1.service;
 
-import com.codewithomarm.rosterup.dto.request.tenant.CreateTenantRequest;
-import com.codewithomarm.rosterup.dto.request.tenant.UpdateTenantRequest;
-import com.codewithomarm.rosterup.dto.response.TenantResponse;
-import com.codewithomarm.rosterup.exceptions.DuplicateSubdomainException;
-import com.codewithomarm.rosterup.exceptions.InvalidTenantParameterException;
-import com.codewithomarm.rosterup.exceptions.TenantNotFoundException;
-import com.codewithomarm.rosterup.model.Tenant;
-import com.codewithomarm.rosterup.repository.TenantRepository;
-import com.codewithomarm.rosterup.service.ITenantService;
+import com.codewithomarm.rosterup.tenant.v1.dto.request.CreateTenantRequest;
+import com.codewithomarm.rosterup.tenant.v1.dto.request.UpdateTenantRequest;
+import com.codewithomarm.rosterup.tenant.v1.dto.response.TenantResponse;
+import com.codewithomarm.rosterup.tenant.v1.exception.DuplicateSubdomainException;
+import com.codewithomarm.rosterup.tenant.v1.exception.InvalidTenantParameterException;
+import com.codewithomarm.rosterup.tenant.v1.exception.TenantNotFoundException;
+import com.codewithomarm.rosterup.tenant.v1.model.Tenant;
+import com.codewithomarm.rosterup.tenant.v1.repository.TenantRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
