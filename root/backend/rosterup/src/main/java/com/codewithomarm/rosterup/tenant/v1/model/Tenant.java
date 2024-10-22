@@ -1,5 +1,6 @@
 package com.codewithomarm.rosterup.tenant.v1.model;
 
+import com.codewithomarm.rosterup.roster.v1.account.model.Account;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -31,10 +32,10 @@ public class Tenant {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tenant")
     private List<Account> accounts;
 
+    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tenant")
     private List<Position> positions;
 
@@ -102,7 +103,6 @@ public class Tenant {
         this.updatedAt = updatedAt;
     }
 
-    /*
     public List<Account> getAccounts() {
         return accounts;
     }
@@ -111,6 +111,7 @@ public class Tenant {
         this.accounts = accounts;
     }
 
+    /*
     public List<Position> getPositions() {
         return positions;
     }
