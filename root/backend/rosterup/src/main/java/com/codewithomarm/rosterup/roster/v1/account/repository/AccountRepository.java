@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
     // Fetch account by name and tenant Id
     @Query("SELECT a FROM Account a WHERE LOWER(REPLACE(a.name, ' ', '-')) = LOWER(:name) AND a.tenant.id = :tenantId")
-    Optional<Account> findByNameAndTenantId(String name, Long tenantId, Pageable pageable);
+    Page<Account> findByNameAndTenantId(String name, Long tenantId, Pageable pageable);
 
     // Fetch accounts by isActive and tenant Id
     Page<Account> findByIsActiveAndTenantId(Boolean isActive, Long tenantId, Pageable pageable);

@@ -23,7 +23,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// Spring Security Dependencies
+	implementation 'org.springframework.security:spring-security-core'
+	implementation 'org.springframework.security:spring-security-config'
+	implementation 'org.springframework.security:spring-security-web'
+	// JWT Dependency
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	// Spring Doc Open API Dependency
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 	// Validation Dependency
@@ -32,6 +42,7 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	// Test Dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.1'
 	testImplementation 'org.mockito:mockito-core:5.14.1'
 	testImplementation 'org.mockito:mockito-junit-jupiter:5.14.1'
