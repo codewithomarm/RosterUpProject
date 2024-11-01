@@ -96,8 +96,11 @@ public class RosterupServiceImpl implements IRosterupUserService {
         }
 
         return roles.stream()
-                .map(roleRequest -> rosterupRoleRepository.findByName(roleRequest.getName())
-                        .orElseThrow(() -> new InvalidRoleNameException("Role not found: " + roleRequest.getName())))
+                .map(roleRequest -> {
+                    ERole role = ERole.valueOf(roleRequest.getName());
+                    return rosterupRoleRepository.findByName(role)
+                            .orElseThrow(() -> new InvalidRoleNameException("Role not found: " + roleRequest.getName()));
+                })
                 .collect(Collectors.toSet());
     }
 
