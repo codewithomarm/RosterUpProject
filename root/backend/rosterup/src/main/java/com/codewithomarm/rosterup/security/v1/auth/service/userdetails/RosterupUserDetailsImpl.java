@@ -4,6 +4,7 @@ import com.codewithomarm.rosterup.security.v1.user.model.RosterupRole;
 import com.codewithomarm.rosterup.security.v1.user.model.RosterupUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -32,7 +33,9 @@ public class RosterupUserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return rosterupRoles;
+        return rosterupRoles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toString()))
+                .toList();
     }
 
     @Override
