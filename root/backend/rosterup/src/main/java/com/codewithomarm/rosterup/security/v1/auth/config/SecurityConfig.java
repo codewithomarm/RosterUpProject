@@ -41,7 +41,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/roster-up/v1/auth/**").permitAll()
                         .requestMatchers("/api/roster-up/v1/tenants/**").hasRole("DEV")
-                        .requestMatchers("/api/v1/demo/**").hasRole("USER")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
