@@ -24,18 +24,6 @@ public class CreateRosterupUserRequest {
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$", message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "AccountNonExpired field is required")
-    private Boolean accountNonExpired;
-
-    @NotBlank(message = "AccountNonLocked field is required")
-    private Boolean accountNonLocked;
-
-    @NotBlank(message = "CredentialsNonExpired field is required")
-    private Boolean credentialsNonExpired;
-
-    @NotBlank(message = "Enabled field is required")
-    private Boolean enabled;
-
     @NotBlank(message = "Roles field is required")
     private Set<RoleRequest> roles;
 
@@ -73,38 +61,6 @@ public class CreateRosterupUserRequest {
         this.email = email;
     }
 
-    public Boolean getAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(Boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public Boolean getAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(Boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public Boolean getCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public Set<RoleRequest> getRoles() {
         return roles;
     }
@@ -119,10 +75,6 @@ public class CreateRosterupUserRequest {
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", accountNonExpired=" + accountNonExpired +
-                ", accountNonLocked=" + accountNonLocked +
-                ", credentialsNonExpired=" + credentialsNonExpired +
-                ", enabled=" + enabled +
                 ", roles=" + roles +
                 '}';
     }
