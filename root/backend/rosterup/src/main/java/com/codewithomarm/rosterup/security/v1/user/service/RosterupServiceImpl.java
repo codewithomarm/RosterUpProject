@@ -82,8 +82,8 @@ public class RosterupServiceImpl implements IRosterupUserService {
     }
 
     private Set<RosterupRole> validateAndFetchRoles(Set<RoleRequest> roles) {
-        Set<String> validRoleNames = Set.of(ERole.ROLE_DEV.name(), ERole.ROLE_ADMIN.name(),
-                ERole.ROLE_MANAGER.name(), ERole.ROLE_SUP.name(), ERole.ROLE_USER.name());
+        Set<String> validRoleNames = Set.of(ERole.DEV.name(), ERole.ADMIN.name(),
+                ERole.MANAGER.name(), ERole.SUP.name(), ERole.USER.name());
         Set<String> requestedRoleNames = roles.stream().map(RoleRequest::getName)
                 .collect(Collectors.toSet());
 
