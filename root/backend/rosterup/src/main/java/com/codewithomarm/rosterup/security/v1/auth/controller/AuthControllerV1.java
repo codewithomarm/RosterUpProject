@@ -17,7 +17,7 @@ import java.io.IOException;
 
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/roster-up/v1/auth")
 public class AuthControllerV1 {
 
     private final AuthenticationService authenticationService;
@@ -43,22 +43,4 @@ public class AuthControllerV1 {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);
     }
-
-
-
-    /*
-    @PostMapping("/register")
-    public ResponseEntity<RosterupUserResponse> registerUser(@Valid @RequestBody CreateRosterupUserRequest request) {
-        RosterupUserResponse response = rosterupUserService.createUser(request);
-
-        // Set the location header of the newly created user
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(response.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(response);
-    }
-    */
 }
