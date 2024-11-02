@@ -53,11 +53,11 @@ public class DataInitializer implements CommandLineRunner {
             user.setEnabled(true);
 
             Set<RosterupRole> roles = new HashSet<>();
-            roles.add(roleRepository.findByName(ERole.ROLE_DEV).orElseThrow());
-            roles.add(roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow());
-            roles.add(roleRepository.findByName(ERole.ROLE_MANAGER).orElseThrow());
-            roles.add(roleRepository.findByName(ERole.ROLE_SUP).orElseThrow());
-            roles.add(roleRepository.findByName(ERole.ROLE_USER).orElseThrow());
+            roles.add(roleRepository.findByName(ERole.DEV).orElseThrow());
+            roles.add(roleRepository.findByName(ERole.ADMIN).orElseThrow());
+            roles.add(roleRepository.findByName(ERole.MANAGER).orElseThrow());
+            roles.add(roleRepository.findByName(ERole.SUP).orElseThrow());
+            roles.add(roleRepository.findByName(ERole.USER).orElseThrow());
 
             user.setRosterupRoles(roles);
 
