@@ -32,7 +32,7 @@ import java.net.URI;
  * as well as search functionalities.
  */
 @RestController
-@RequestMapping("api/roster-up/v1/tenants")
+@RequestMapping("/api/roster-up/v1/tenants")
 @Tag(name = "Tenant", description = "Tenant management APIs")
 public class TenantControllerV1 {
 
