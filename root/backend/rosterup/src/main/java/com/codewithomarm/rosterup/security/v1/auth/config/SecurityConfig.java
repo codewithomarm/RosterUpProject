@@ -38,17 +38,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/").permitAll()
-                        .requestMatchers("/api/dev/**").hasRole("DEV")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/manager/**").hasRole("MANAGER")
-                        .requestMatchers("api/sup/**").hasRole("SUP")
-                        .requestMatchers("/api/user/**").hasRole("USER")
-                        .requestMatchers("/api/anon/**").permitAll()
+                        .requestMatchers("/api/roster-up/v1/auth/**").permitAll()
+                        .requestMatchers("/api/roster-up/v1/tenants/**").hasRole("DEV")
+                        .requestMatchers("/api/v1/demo/**").hasRole("USER")
                         .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
