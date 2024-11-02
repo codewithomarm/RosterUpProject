@@ -2,6 +2,7 @@ package com.codewithomarm.rosterup.security.v1.user.service;
 
 import com.codewithomarm.rosterup.security.v1.user.dto.request.CreateRosterupUserRequest;
 import com.codewithomarm.rosterup.security.v1.user.dto.request.RoleRequest;
+import com.codewithomarm.rosterup.security.v1.user.dto.request.UpdateRosterupUserRequest;
 import com.codewithomarm.rosterup.security.v1.user.dto.response.RosterupUserResponse;
 import com.codewithomarm.rosterup.security.v1.user.exception.DuplicateEmailException;
 import com.codewithomarm.rosterup.security.v1.user.exception.DuplicateUsernameException;
@@ -11,9 +12,12 @@ import com.codewithomarm.rosterup.security.v1.user.model.RosterupRole;
 import com.codewithomarm.rosterup.security.v1.user.model.RosterupUser;
 import com.codewithomarm.rosterup.security.v1.user.repository.RosterupRoleRepository;
 import com.codewithomarm.rosterup.security.v1.user.repository.RosterupUserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,20 +28,67 @@ public class RosterupServiceImpl implements IRosterupUserService {
     private final RosterupRoleRepository rosterupRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public RosterupServiceImpl(RosterupUserRepository rosterupUserRepository, RosterupRoleRepository rosterupRoleRepository,
+    public RosterupServiceImpl(RosterupUserRepository rosterupUserRepository,
+                               RosterupRoleRepository rosterupRoleRepository,
                                PasswordEncoder passwordEncoder) {
         this.rosterupUserRepository = rosterupUserRepository;
         this.rosterupRoleRepository = rosterupRoleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+
     @Override
-    public RosterupUserResponse findById(Long id) {
+    public Page<RosterupUserResponse> getAllUsers(Pageable pageable) {
         return null;
     }
 
     @Override
-    public RosterupUserResponse findByUsername(String username) {
+    public Optional<RosterupUserResponse> getUserById(String id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<RosterupUserResponse> getUserByUsername(String username) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<RosterupUserResponse> getUserByEmail(String email) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void updatePassword(String userId, String newPassword) {
+
+    }
+
+    @Override
+    public Page<RosterupUserResponse> getUsersByAccountNonExpired(Boolean accountNonExpired, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<RosterupUserResponse> getUsersByAccountNonLocked(Boolean accountNonLocked, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<RosterupUserResponse> getUsersByCredentialsExpired(Boolean credentialsExpired, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<RosterupUserResponse> getUsersByEnabled(Boolean enabled, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<RosterupUserResponse> getRolesByUsername(String username, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<RosterupUserResponse> getTokensByUsername(String username, Pageable pageable) {
         return null;
     }
 
@@ -59,10 +110,10 @@ public class RosterupServiceImpl implements IRosterupUserService {
         rosterupUserEntity.setUsername(request.getUsername());
         rosterupUserEntity.setEmail(request.getEmail());
         rosterupUserEntity.setPassword(passwordEncoder.encode(request.getPassword()));
-        rosterupUserEntity.setAccountNonExpired(request.getAccountNonExpired());
-        rosterupUserEntity.setAccountNonLocked(request.getAccountNonLocked());
-        rosterupUserEntity.setCredentialsNonExpired(request.getCredentialsNonExpired());
-        rosterupUserEntity.setEnabled(request.getEnabled());
+        rosterupUserEntity.setAccountNonExpired(true);
+        rosterupUserEntity.setAccountNonLocked(true);
+        rosterupUserEntity.setCredentialsNonExpired(true);
+        rosterupUserEntity.setEnabled(true);
         rosterupUserEntity.setRosterupRoles(validatedRosterupRoles);
 
         RosterupUser savedRosterupUser = rosterupUserRepository.save(rosterupUserEntity);
@@ -71,14 +122,13 @@ public class RosterupServiceImpl implements IRosterupUserService {
     }
 
     @Override
-    public RosterupUserResponse updateUser(Long id, RosterupUser rosterupUser) {
-        // TODO implement update user
+    public RosterupUserResponse updateUser(String id, UpdateRosterupUserRequest request) {
         return null;
     }
 
     @Override
-    public void deleteUser(Long id) {
-        // TODO implement delete user
+    public void deleteUser(String id) {
+
     }
 
     private Set<RosterupRole> validateAndFetchRoles(Set<RoleRequest> roles) {
