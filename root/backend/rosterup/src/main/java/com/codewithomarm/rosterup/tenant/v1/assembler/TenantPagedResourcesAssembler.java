@@ -73,14 +73,18 @@ public class TenantPagedResourcesAssembler extends PagedResourcesAssembler<Tenan
         return pagedModel;
     }
 
-    private static class TenantModelAssembler implements RepresentationModelAssembler<TenantResponse, EntityModel<TenantResponse>> {
+    private static class TenantModelAssembler implements RepresentationModelAssembler<TenantResponse,
+            EntityModel<TenantResponse>> {
 
         @Override
         public EntityModel<TenantResponse> toModel(TenantResponse tenant) {
             return EntityModel.of(tenant,
-                    linkTo(methodOn(TenantControllerV1.class).getTenantById(tenant.getId().toString())).withSelfRel(),
-                    linkTo(methodOn(TenantControllerV1.class).updateTenant(tenant.getId().toString(), null)).withRel("update"),
-                    linkTo(methodOn(TenantControllerV1.class).deleteTenant(tenant.getId().toString())).withRel("delete")
+                    linkTo(methodOn(TenantControllerV1.class)
+                            .getTenantById(tenant.getId().toString())).withSelfRel(),
+                    linkTo(methodOn(TenantControllerV1.class)
+                            .updateTenant(tenant.getId().toString(), null)).withRel("update"),
+                    linkTo(methodOn(TenantControllerV1.class)
+                            .deleteTenant(tenant.getId().toString())).withRel("delete")
             );
         }
     }
