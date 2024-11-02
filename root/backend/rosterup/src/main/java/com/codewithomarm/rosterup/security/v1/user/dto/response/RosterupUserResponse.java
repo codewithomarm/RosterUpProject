@@ -1,11 +1,14 @@
 package com.codewithomarm.rosterup.security.v1.user.dto.response;
 
 import com.codewithomarm.rosterup.security.v1.user.model.RosterupRole;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public class RosterupUserResponse {
+@Relation(collectionRelation = "users", itemRelation = "user")
+public class RosterupUserResponse extends RepresentationModel<RosterupUserResponse> {
     private Long id;
     private String username;
     private String email;
@@ -18,6 +21,19 @@ public class RosterupUserResponse {
     private Set<RosterupRole> rosterupRoles;
 
     public RosterupUserResponse() {
+    }
+
+    public RosterupUserResponse(Long id, String username, String email, String accountNonExpired, String accountNonLocked, String credentialsNonExpired, String enabled, LocalDateTime createdAt, LocalDateTime updatedAt, Set<RosterupRole> rosterupRoles) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.accountNonExpired = accountNonExpired;
+        this.accountNonLocked = accountNonLocked;
+        this.credentialsNonExpired = credentialsNonExpired;
+        this.enabled = enabled;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.rosterupRoles = rosterupRoles;
     }
 
     public Long getId() {
